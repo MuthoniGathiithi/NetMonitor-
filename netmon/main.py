@@ -1,4 +1,4 @@
-from scapy.all import sniff, IP, DNSQR
+from scapy.all import sniff, IP, DNSQR,TCP
 
 def dns_sniffer(packet):
     if packet.haslayer(DNSQR):
@@ -9,5 +9,13 @@ def dns_sniffer(packet):
 
 print("📡 Listening for DNS queries on port 53...")
 sniff(filter="port 53", prn=dns_sniffer, count=10)
+
+
+def tcp_packet(packet):
+    if packet.haslayer(TCP):
+        print("\n📦 TCP Packet:")
+        print(f"From {packet[IP].src}:{packet[TCP].sport} → {packet[IP].dst}:{packet[TCP].dport}")
+
+
 # This code captures DNS queries on port 53 and prints the source and destination IP addresses along with the queried domain.
 # It uses Scapy to sniff network packets and specifically looks for DNS query requests.
