@@ -28,5 +28,20 @@ def suspicious_packet(packet):
             print(f"Suspicious Port: {sport} → {dport}")
             print(f"From {packet[IP].src} to {packet[IP].dst}")
 
+            
+def full_sniffer(packet):
+    # DNS Query handler (your earlier one)
+    if packet.haslayer(DNSQR):
+        print(f"\n🌐 DNS Query: {packet[IP].src} asked for {packet[DNSQR].qname.decode()}")
+
+    # TCP handler
+    tcp_packet(packet)
+
+    # Suspicious check
+    suspicious_packet(packet)
+
+# Start sniffing
+sniff(filter="ip", prn=full_sniffer, store=0)
+
 # This code captures DNS queries on port 53 and prints the source and destination IP addresses along with the queried domain.
 # It uses Scapy to sniff network packets and specifically looks for DNS query requests.
